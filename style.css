@@ -1,0 +1,36 @@
+
+html,
+body {
+  font-family: Arial, sans-serif;
+
+}
+
+#map-container{
+  position: fixed;
+  top: 50px;
+  left: 0;
+  bottom: 0;
+  right: 0;
+}
+#map {
+  width:100%;
+  height:100%;     
+}
+
+.container-fluid{
+  width:100%;
+position:relative;
+
+}
+
+.place-list{
+  font-size: 12px;
+}
+
+
+header {
+    height:50px;
+}
+footer {
+    height:20px;
+}
