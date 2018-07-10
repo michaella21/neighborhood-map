@@ -1,4 +1,5 @@
 
+//initial data
 var placeData = [
 	{
         name : 'Pike Place Market',
@@ -84,7 +85,6 @@ var placeData = [
     	location: {lat: 47.6655, lng: -122.3970}
     }
 ];
-
 
 var map;
 var markers =[];
@@ -174,6 +174,7 @@ function initMap() {
 	ko.applyBindings(new viewNeiborhoodModel());
 };
 
+// place variable constructor
 var Place = function(data){
   this.name = ko.observable(data.name);
   this.wikiName = ko.observable(data.wikiName);
@@ -189,17 +190,20 @@ var viewNeiborhoodModel = function(){
 	var infowindow = new google.maps.InfoWindow();
   var bounds = new google.maps.LatLngBounds();
 
-  
+  // favoritePlaces for the base data store
+  // selectedPlaces for the subset of data depending on the filter 
   this.favoritePlaces = ko.observableArray([]);
+  this.selectedPlaces=ko.observableArray([]);
 
-  this.typeOfPlaces = ko.observableArray(['Attraction', 'Museum/Arboretum', 
-    'Nature', 'Park']);
+  // types for dropdown filtering
+  this.typeOfPlaces = ko.observableArray(['Show all', 'Attraction', 'Museum/Arboretum', 'Nature', 'Park']);
   
   placeData.forEach(function(data){    
     self.favoritePlaces.push(new Place(data));
   });
 
 
+  // initialize the currentplace as the first one - indicate which one is active (chosen)
   this.currentPlace = ko.observable(this.favoritePlaces()[0]);
 
   for (var i = 0; i < this.favoritePlaces().length; i++) {
@@ -239,18 +243,19 @@ var viewNeiborhoodModel = function(){
     });
 
     marker.addListener('click', function(){
-
+      this.setAnimation(null);
       populateInfoWindow(this, infowindow);
 
     })
-   
 
     	bounds.extend(markers[i].position);
   }
 
   
   map.fitBounds(bounds);
-  
+
+
+  // when the user click the name of place from the list, it sets the active place and change the marker color - and populate the window
   this.setPlace = function(clickedPlace){
     if (self.currentPlace != clickedPlace){
       self.currentPlace().marker.setIcon(defaultIcon)
@@ -263,18 +268,31 @@ var viewNeiborhoodModel = function(){
     
   };
 
-
-
+  // when the user filter the type with dropdown menu, it filters out the list view and also markers on the map
+  this.selectedPlaces(this.favoritePlaces.slice(0));
   this.selectedType = function filterType(type){
     showAllMarkers();
-    for (var i = 0; i < this.favoritePlaces().length; i++) {
-      var marker = this.favoritePlaces()[i].marker
-      if (this.favoritePlaces()[i].type() != type){
-        marker.setMap(null);
-      }
+    if (type == 'Show all'){
+      this.selectedPlaces([]);
+      this.selectedPlaces(this.favoritePlaces.slice(0));
     }
+    else{
+      this.selectedPlaces([]);
+      for (var i = 0; i < this.favoritePlaces().length; i++) {
+        var marker = this.favoritePlaces()[i].marker
+        
+        if (this.favoritePlaces()[i].type() != type){
+          marker.setMap(null);
+        }
+        else{
+          this.selectedPlaces.push(this.favoritePlaces()[i]);
+        }
+      } 
+    } 
+    
   };
 
+  // whenever the infowindow is populated, it requests the data from wikipedia, showing a breif description and offers the link to the wiki page. 
   function getWikiData(marker, infowindow){
     window.infowindow = infowindow
     
