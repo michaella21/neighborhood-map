@@ -1,4 +1,4 @@
-
+"use strict";
 //initial data
 var placeData = [
 	{
@@ -88,8 +88,11 @@ var placeData = [
 
 var map;
 var markers =[];
-var wikiData = {}
+var wikiData = {};
 
+/**
+* @description initialize a google map with the specified styles
+*/
 function initMap() {
 	var styles = [
           {
@@ -282,17 +285,24 @@ var viewNeiborhoodModel = function(){
         var marker = this.favoritePlaces()[i].marker
         
         if (this.favoritePlaces()[i].type() != type){
-          marker.setMap(null);
+          marker.setVisible(false);
         }
         else{
           this.selectedPlaces.push(this.favoritePlaces()[i]);
+          marker.setVisible(true);
         }
       } 
     } 
     
   };
 
-  // whenever the infowindow is populated, it requests the data from wikipedia, showing a breif description and offers the link to the wiki page. 
+  /**
+  *@description whenever the infowindow is populated, it requests the data
+  * from wikipedia, showing a breif description and offers the link to the 
+  * wiki page.
+  * @params {object} marker - google map marker which is clicked
+  * @params {object} infowindow - google map infowindow object
+  */ 
   function getWikiData(marker, infowindow){
     window.infowindow = infowindow
     
@@ -300,20 +310,26 @@ var viewNeiborhoodModel = function(){
     	url: "https://en.wikipedia.org/w/api.php?action=opensearch&search=" + marker.info + "&format=json&callback=wikiCallback",
     	dataType:"jsonp",
       error: function(){
-        console.log('timeout reached')
+        var error_message = '<div><strong> Oh no! somthing must have broken. Please try it again in a minute </strong></div>'
+        window.infowindow.setContent(error_message);
+        infowindow.open(map, marker);
       }, 
-      success: function(response){
+      success: function(response){ 
         var description = (response[2].length == 1 ? response[2] : response[2][0])
         var wikiUrl = (response[3].length == 1 ? response[3] : response[3][0])
-        content = '<div><strong>' + marker.name + '</strong></div><br>' + '<div><p>' + description + '</p></div>' + '<br><div> Want to know more about this place?<a href="' + wikiUrl +'"> <strong>Continute to wikipedia page</a>'
-        window.infowindow.setContent(content)
+        var content = '<div><strong>' + marker.name + '</strong></div><br>' + '<div><p>' + description + '</p></div>' + '<br><div> Want to know more about this place?<a href="' + wikiUrl +'"> <strong>Continute to wikipedia page</a>'
+        window.infowindow.setContent(content);
         infowindow.open(map, marker);
       },
-      timeout: 8000
+      timeout: 2000
     })
   };
   
-
+  /*
+  @description Populates the infowindow on the connected marker
+  @params {object} marker - the selected marker, google map marker object
+  @params {object} infowindow - google map infowindow object
+  */
   function populateInfoWindow(marker, infowindow) {
       // Check to make sure the infowindow is not already opened on this marker.
 
@@ -336,15 +352,22 @@ var viewNeiborhoodModel = function(){
     	}
   }
 
+  /**
+  *@description Makes all markers visible on the map
+  */
   function showAllMarkers() {
         var bounds = new google.maps.LatLngBounds();
         for (var i = 0; i < markers.length; i++) {
-          markers[i].setMap(map);
+          markers[i].setVisible(true);
           bounds.extend(markers[i].position);
         }
         map.fitBounds(bounds);
       }
 
+  /**
+  *@description Makes a marker with a spcified color
+  *@params {string} - hex color code
+  */
   function makeMarkerIcon(markerColor) {
         var markerImage = new google.maps.MarkerImage(
           'http://chart.googleapis.com/chart?chst=d_map_spin&chld=1.15|0|'+ markerColor +

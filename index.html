@@ -1,24 +1,35 @@
 <!DOCTYPE html>
 <html>
   <head>
-   <link href='http://fonts.googleapis.com/css?family=Roboto:400,300,700' rel='stylesheet' type='text/css'>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <link href='http://fonts.googleapis.com/css?family=Roboto:400,300,700' rel='stylesheet' type='text/css'>
       <!-- Bootstrap core CSS -->
     <link href="static/bootstrap.min.css" rel="stylesheet">
     <!-- Bootstrap theme -->
     <link href="static/bootstrap-theme.min.css" rel="stylesheet">
-   <link rel=stylesheet type=text/css href='static/dashboard.css'">
-   <link rel=stylesheet type=text/css href='static/style.css'">
-   <script src="static/knockout-3.2.0.js"></script>
-   <script src="app.js"></script>
+    <link rel=stylesheet type=text/css href='static/dashboard.css'">
+    <link rel=stylesheet type=text/css href='static/style.css'">
+   
   </head>
   <body>
+    <script src="static/knockout-3.2.0.js"></script>
+    <script src="app.js"></script>
+    <script src="static/jquery.min.js"></script>
+    <script async defer
+          src="https://maps.googleapis.com/maps/api/js?key=AIzaSyC3gyvC8YaIX64wAlez3N0n3abvvU2WrKk&v=3&callback=initMap">
+    </script>
+  
     <nav class="navbar navbar-inverse navbar-fixed-top">
       <div class="container-fluid">
-        <div class="navbar-header">
+        <div class="row">
+        <div class="col-xs-4 col-sm-6 col-md-6">
+        
           <span class="navbar-brand" > Welcome to Seattle! </span>
 
         </div>
-          <span class="navbar-brand navbar-right"> Please choose your interset from dropdown!</span>
+        <div class="col-xs-8 col-sm-6 col-md-6">
+          <span class="navbar-brand navbar-right"> Please choose your interset from dropdown!</span></div>
   </nav>
     <div class="container-fluid">
       <div class="row">
@@ -37,11 +48,7 @@
 
       </div>
     </div>
-    
-    <script src="static/jquery.min.js"></script>
-    <script async defer
-        src="https://maps.googleapis.com/maps/api/js?key=AIzaSyC3gyvC8YaIX64wAlez3N0n3abvvU2WrKk&v=3&callback=initMap">
-    </script>
+  
 
   </body>
 </html>
