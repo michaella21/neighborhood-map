@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
   <head>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
@@ -8,16 +8,16 @@
     <link href="static/bootstrap.min.css" rel="stylesheet">
     <!-- Bootstrap theme -->
     <link href="static/bootstrap-theme.min.css" rel="stylesheet">
-    <link rel=stylesheet type=text/css href='static/dashboard.css'">
-    <link rel=stylesheet type=text/css href='static/style.css'">
-   
+    <link rel=stylesheet type=text/css href='static/dashboard.css'>
+    <link rel=stylesheet type=text/css href='static/style.css'>
+    <title> Seattle Map </title>
   </head>
   <body>
     <script src="static/knockout-3.2.0.js"></script>
     <script src="app.js"></script>
     <script src="static/jquery.min.js"></script>
     <script async defer
-          src="https://maps.googleapis.com/maps/api/js?key=AIzaSyC3gyvC8YaIX64wAlez3N0n3abvvU2WrKk&v=3&callback=initMap">
+          src="https://maps.googleapis.com/maps/api/js?key=AIzaSyC3gyvC8YaIX64wAlez3N0n3abvvU2WrKk&v=3&callback=initMap" onerror="googleError()">
     </script>
   
     <nav class="navbar navbar-inverse navbar-fixed-top">
@@ -30,7 +30,9 @@
         </div>
         <div class="col-xs-8 col-sm-6 col-md-6">
           <span class="navbar-brand navbar-right"> Please choose your interset from dropdown!</span></div>
-  </nav>
+        </div>
+      </div>
+    </nav>
     <div class="container-fluid">
       <div class="row">
         <div class="col-xs-3 col-sm-3 col-md-3 sidebar">

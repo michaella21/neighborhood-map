@@ -1,7 +1,11 @@
-"use strict";
+
+(function () {
+    "use strict";
+}());
+
 //initial data
 var placeData = [
-	{
+  {
         name : 'Pike Place Market',
         wikiName:'Pike_Place_Market',
         type: 'Attraction',
@@ -48,10 +52,10 @@ var placeData = [
      
     },
     {
-    	name : 'Washington Park Arboretum',
-    	wikiName: 'Washington_Park_Arboretum',
+      name : 'Washington Park Arboretum',
+      wikiName: 'Washington_Park_Arboretum',
       type: 'Museum/Arboretum',
-    	location: {lat: 47.6398, lng: -122.2945}
+      location: {lat: 47.6398, lng: -122.2945}
     },
     {
       name : 'Seattle Japanese Garden',
@@ -66,23 +70,23 @@ var placeData = [
       location: {lat: 47.6957, lng: -122.2783}
     },
     {
-    	name : 'Discovery Park',
-    	wikiName: 'Discovery_Park_(Seattle)',
+      name : 'Discovery Park',
+      wikiName: 'Discovery_Park_(Seattle)',
       type: 'Park',
-    	location: {lat: 47.6573, lng: -122.4055}
-    	
+      location: {lat: 47.6573, lng: -122.4055}
+      
     },
     {
-    	name : 'Fremont Troll', 
-    	wikiName: 'Fremont_Troll', 
+      name : 'Fremont Troll', 
+      wikiName: 'Fremont_Troll', 
       type: 'Attraction',
-    	location: {lat: 47.6510, lng: -122.3473}
+      location: {lat: 47.6510, lng: -122.3473}
     }, 
     {
-    	name : 'Ballard Locks', 
-    	wikiName: 'Ballard_Locks', 
+      name : 'Ballard Locks', 
+      wikiName: 'Ballard_Locks', 
       type: 'Attraction',
-    	location: {lat: 47.6655, lng: -122.3970}
+      location: {lat: 47.6655, lng: -122.3970}
     }
 ];
 
@@ -94,7 +98,7 @@ var wikiData = {};
 * @description initialize a google map with the specified styles
 */
 function initMap() {
-	var styles = [
+  var styles = [
           {
             featureType: 'water',
             stylers: [
@@ -169,12 +173,12 @@ function initMap() {
               }
         ];
 // Create a new map 
-	map = new google.maps.Map(document.getElementById('map'), {
-	  center: {lat: 47.6101, lng: -122.3421},
-	  zoom: 20,
-	  styles:styles
-	});
-	ko.applyBindings(new viewNeiborhoodModel());
+  map = new google.maps.Map(document.getElementById('map'), {
+    center: {lat: 47.6101, lng: -122.3421},
+    zoom: 20,
+    styles:styles
+  });
+  ko.applyBindings(new viewNeiborhoodModel());
 };
 
 // place variable constructor
@@ -186,11 +190,15 @@ var Place = function(data){
   this.marker = ko.observable();
 };
 
-
+function googleError(){
+  $('#map').html('<br><br><div><strong>Error: google map failed to load!!</strong></div><br><div><strong> Please try in a few seconds again. </strong></div>').css({"color": "red", "font-size": "24px"});
+}
 
 var viewNeiborhoodModel = function(){
   var self=this;
-	var infowindow = new google.maps.InfoWindow();
+  var infowindow = new google.maps.InfoWindow({
+    maxWidth:250
+  });
   var bounds = new google.maps.LatLngBounds();
 
   // favoritePlaces for the base data store
@@ -210,29 +218,29 @@ var viewNeiborhoodModel = function(){
   this.currentPlace = ko.observable(this.favoritePlaces()[0]);
 
   for (var i = 0; i < this.favoritePlaces().length; i++) {
-  	  
-  	var position = self.favoritePlaces()[i].location();
+      
+    var position = self.favoritePlaces()[i].location();
     var name = self.favoritePlaces()[i].name();
     var info = self.favoritePlaces()[i].wikiName();
 
     var defaultIcon = makeMarkerIcon('0750af');
     var activeIcon = makeMarkerIcon('f7f01d');
 
-  	var marker = new google.maps.Marker({
-    	  map: map,
-    	  position: position,
+    var marker = new google.maps.Marker({
+        map: map,
+        position: position,
         name: name,
         animation: google.maps.Animation.DROP,
         id: i,
         icon: defaultIcon,
         info: info
       
-  	});
+    });
     
     this.favoritePlaces()[i].marker = marker;
-   	markers.push(marker);
+    markers.push(marker);
 
-   	marker.addListener('mouseover', function() {
+    marker.addListener('mouseover', function() {
       if (this.getAnimation() !== null) {
         this.setAnimation(null);
       } else {
@@ -251,7 +259,7 @@ var viewNeiborhoodModel = function(){
 
     })
 
-    	bounds.extend(markers[i].position);
+      bounds.extend(markers[i].position);
   }
 
   
@@ -306,9 +314,9 @@ var viewNeiborhoodModel = function(){
   function getWikiData(marker, infowindow){
     window.infowindow = infowindow
     
-  	$.ajax({
-    	url: "https://en.wikipedia.org/w/api.php?action=opensearch&search=" + marker.info + "&format=json&callback=wikiCallback",
-    	dataType:"jsonp",
+    $.ajax({
+      url: "https://en.wikipedia.org/w/api.php?action=opensearch&search=" + marker.info + "&format=json&callback=wikiCallback",
+      dataType:"jsonp",
       error: function(){
         var error_message = '<div><strong> Oh no! somthing must have broken. Please try it again in a minute </strong></div>'
         window.infowindow.setContent(error_message);
@@ -343,13 +351,13 @@ var viewNeiborhoodModel = function(){
           infowindow.marker = marker;
           marker.setIcon(activeIcon);
           infowindow.close()
-        	infowindow.setContent(getWikiData(marker, infowindow));
-        	// Make sure the marker property is cleared if the infowindow is closed.
-        	infowindow.addListener('closeclick',function(){
+          infowindow.setContent(getWikiData(marker, infowindow));
+          // Make sure the marker property is cleared if the infowindow is closed.
+          infowindow.addListener('closeclick',function(){
             infowindow.setMarker = null;
             marker.setIcon(defaultIcon);
-        	});
-    	}
+          });
+      }
   }
 
   /**
